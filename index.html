@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="node_modules/vue/dist/vue.min.js"></script>
+    <title>test vue</title>
+
+    <script>
+
+            console.log("vue =>");
+            console.log(Vue);
+
+            function makeSomeVueStuff() {
+                const app = new Vue({
+                    el: '#app',
+                    data: {
+                        count:0,
+                        title:"yo",
+                        msg: 'Hello from vue !',
+                        resultCalcul: 100 / 33,
+                        userTemp: {
+                        langue:null,
+                        firstName:null,
+                        lastName:null,
+                        },
+                        user: {
+                            name: "Anis",
+                            age:23,
+                            hobbies:["foo", "bar", "baz"]
+                        },
+
+                        users: [
+                        {langue: "français", firstName:"", lastName:"Zidane"},
+                        {langue: "anglais", firstName:"", lastName:"Zizou"},
+                        {langue: "arabe", firstName:"", lastName:"Ronaldo"},
+                        {langue: "allemand", firstName:"", lastName:"Benzema"},
+                               ],
+                        
+                        
+                     },
+
+                        computed: {
+                            countDouble() {
+                                return this.count * 2;
+                            }
+                    },
+
+                    methods:{
+
+                        addUser(){
+                        if (!this.isUserFind()) {
+                            this.users.push(this.userTemp);
+                        }
+                            },
+
+                        isUserFind() {
+                            const res = this.users.find(u => {
+                                return u.lastName === this.userTemp.lastName && u.firstName === this.userTemp.firsName;
+                            });
+                            return Boolean(res);
+                        }           
+                    }
+                });
+
+                  const todo_list = new Vue ({
+                        el: "#todo_list",
+                        data:{
+                        newTodo:"",
+                        todos:[]
+                        },
+                        methods:{
+                            addTodo(){
+                                if(this.newTodo){
+                                    this.todos.push(this.newTodo);
+                                }
+                            }
+                        }
+                    });
+            }
+        
+        window.addEventListener("DOMContentLoaded", makeSomeVueStuff);
+    
+    </script>
+
+<style>
+        .result{
+            font-weight: bold;
+            color: forestgreen;
+        }
+
+        .result.big{
+            color: firebrick;
+        }
+
+</style>
+</head>
+
+<body>
+    
+    <div id="app">
+        <h1 class="title">{{ title }}</h1>
+        <p>{{ msg }}</p>
+        <div>Vue peut exécuter un calcul ... {{ 1 + 1 }}</div>
+        <div>Mon utilisateur se nomme {{ user.name }}</div>
+        <p>afficher le dernier hooby de l'utilisateur =><br>
+            <u><b>{{ user.hobbies[user.hobbies.length - 1]}}</b></u>
+        </p>
+        <div>
+            <span>Modifier le nom d'user</span>
+            <input type="text" v-model="user.name">
+        </div>
+        <h2 class="title">Les hobbies de mon user</h2>
+        <ul class="list">
+            <li v-for="(hobby, i) in user.hobbies">
+                <span> {{i + 1}} -{{ hobby }}</span>
+            </li>
+        </ul>
+        <p>
+            <input type="range" min="0" max="300" step="10" v-model="resultCalcul">
+            <span class="result" :class="{'big': resultCalcul > 100}">{{resultCalcul}}</span>
+            <span v-if="resultCalcul > 100">est supérieur à 100</span>
+            <span v-else>est inférieur à 100</span>
+            <span v-show="resultCalcul > 100"> je suis affiché avec v-show</span>
+        </p>
+
+        <h2 class="title">Liste des users</h2>
+        <ul>
+            <li v-for="(u,i) in users">
+                <span>{{ i + 1 }} :</span>
+                <span v-for="(prop, key) in u">
+                    {{key}} - {{prop}}
+                </span>
+            </li>
+        </ul>
+        <div id="form_add_user">
+            <input v-model="userTemp.langue" type="text" name="langue" placeholder="langue">
+            <input v-model="userTemp.firstName" type="text" name="firstName" placeholder="prénom">
+            <input v-model="userTemp.lastName"type="text" name="lastName" placeholder="nom">
+            <button @click="addUser()">ajouter user</button>
+        </div>
+        <hr>
+        <h2 class="title">My first counter !</h2>
+        <p class="result">{{count}}</p>
+        <p class="result">Compteur doublé {{countDouble}}</p>
+        <button class="btn" @click="count--">decrement</button>
+        <button class="btn" v-on:click="count++">increment</button>
+
+        </div>
+
+        <div id="todo_list">
+            <h1>todo list</h1>
+            <input v-model="newTodo" type="text">
+            <button @click="addTodo()"> 
+                <span>add todo</span>
+            </button>
+            <ol>
+                <li v-if="!todos.length"> rien à faire pour le moment</li>
+                <li v-else v-for="todo in todos">{{todo}}</li>
+            </ol>
+        </div>
+
+
+</body>
+</html>
